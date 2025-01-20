@@ -1,0 +1,57 @@
+﻿@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<dialog id="@Id" class="@ExtraCssClass">
+    @ChildContent
+</dialog>
+
+@code {
+    [Parameter]
+    [EditorRequired] 
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+
+    [Parameter]
+    public string ExtraCssClass { get; set; } = "";
+
+    IJSObjectReference? jsModule;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            jsModule = await JS.InvokeAsync<IJSObjectReference>("import",
+                "./_content/SuperSimpleBlazorModal/SimpleModal.razor.js");
+        }
+    }
+
+    public async Task ShowModal() 
+    {
+        Console.WriteLine(Id);
+        if (jsModule is null)
+        {
+            throw new InvalidOperationException("JS module not loaded");
+        }
+        await jsModule.InvokeVoidAsync("showModal", Id);
+    }
+
+    public async Task CloseModal() 
+    {
+        if (jsModule is null)
+        {
+            throw new InvalidOperationException("JS module not loaded");
+        }
+        await jsModule.InvokeVoidAsync("closeModal", Id);
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        if (jsModule is not null)
+        {
+            await jsModule.DisposeAsync();
+        }
+    }
+}
