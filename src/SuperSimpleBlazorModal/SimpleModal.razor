@@ -28,7 +28,10 @@
         {
             jsModule = await JS.InvokeAsync<IJSObjectReference>("import",
                 "./_content/SuperSimpleBlazorModal/SimpleModal.razor.js");
-            await OnModalReady.InvokeAsync();
+            if (OnModalReady.HasDelegate)
+            {
+                await OnModalReady.InvokeAsync();
+            }
         }
     }
 
