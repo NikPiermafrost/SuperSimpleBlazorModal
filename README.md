@@ -19,37 +19,38 @@ dotnet add package SuperSimpleBlazorModal
 
 ## Usage
 
-1) Add the following line to your _Imports.razor file:
+Use the SimpleModal component in your Blazor pages or components:
 ```cs
 @using SuperSimpleBlazorModal
-```
-2) Use the SimpleModal component in your Blazor pages or components:
-```cs
-<SimpleModal Id="myModal" ExtraCssClass="custom-modal">
-    <h3>Modal Title</h3>
-    <p>This is the content of the modal.</p>
-    <button @onclick="CloseModal">Close</button>
+@rendermode InteractiveAuto
+<h3>ModalTester</h3>
+
+<SimpleModal @ref="ModalRef" Id="MannajaStaModale" ExtraCssClass="modal-reset" OnModalReady="@(() => ModalReady())">
+    <h1>Modal Content</h1>
+    <p>This is the content of the modal</p>
+    <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
 </SimpleModal>
 
-<button @onclick="ShowModal">Open Modal</button>
+<button disabled="@(!modalReady)" class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
 
 @code {
-    private SimpleModal? modal;
+    private SimpleModal? ModalRef;
+    private bool modalReady = false;
 
-    private async Task ShowModal()
+    async Task ShowModal()
     {
-        if (modal is not null)
-        {
-            await modal.ShowModal();
-        }
+        await ModalRef.ShowModal();
     }
 
-    private async Task CloseModal()
+    async Task CloseModal()
     {
-        if (modal is not null)
-        {
-            await modal.CloseModal();
-        }
+        await ModalRef.CloseModal();
+    }
+
+    void ModalReady() 
+    {
+        modalReady = true;
+        StateHasChanged();
     }
 }
 ```
@@ -83,6 +84,7 @@ If not, you can still customize the `::backdrop` pseudo element
 - `ChildContent` (RenderFragment): The content to be displayed inside the modal.
 - `Id` (string): The unique identifier for the modal. Default is a new GUID.
 - `ExtraCssClass` (string): Additional CSS classes to apply to the modal.
+- `OnModalReady` (EventCallback): Callback signaling when the modal is ready to be used (js is loaded).
 
 ## Methods
 

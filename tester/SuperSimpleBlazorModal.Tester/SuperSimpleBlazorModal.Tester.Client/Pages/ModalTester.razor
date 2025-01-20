@@ -3,16 +3,17 @@
 @rendermode InteractiveAuto
 <h3>ModalTester</h3>
 
-<SimpleModal @ref="ModalRef" Id="MannajaStaModale" ExtraCssClass="modal-reset">
+<SimpleModal @ref="ModalRef" Id="MannajaStaModale" ExtraCssClass="modal-reset" OnModalReady="@(() => ModalReady())">
     <h1>Modal Content</h1>
     <p>This is the content of the modal</p>
     <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
 </SimpleModal>
 
-<button class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
+<button disabled="@(!modalReady)" class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
 
 @code {
     private SimpleModal? ModalRef;
+    private bool modalReady = false;
 
     async Task ShowModal()
     {
@@ -22,5 +23,11 @@
     async Task CloseModal()
     {
         await ModalRef.CloseModal();
+    }
+
+    void ModalReady() 
+    {
+        modalReady = true;
+        StateHasChanged();
     }
 }

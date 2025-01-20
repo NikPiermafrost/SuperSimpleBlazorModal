@@ -17,6 +17,9 @@
     [Parameter]
     public string ExtraCssClass { get; set; } = "";
 
+    [Parameter]
+    public EventCallback OnModalReady { get; set; }
+
     IJSObjectReference? jsModule;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -25,6 +28,7 @@
         {
             jsModule = await JS.InvokeAsync<IJSObjectReference>("import",
                 "./_content/SuperSimpleBlazorModal/SimpleModal.razor.js");
+            await OnModalReady.InvokeAsync();
         }
     }
 
