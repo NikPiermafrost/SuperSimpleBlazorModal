@@ -1,6 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
+    <Title>Super Simple Blazor Modal</Title>
+    <PackageId>SuperSimpleBlazorModal</PackageId>
+    <PackageVersion>0.0.1</PackageVersion>
+    <Authors>Nicola Piermattei</Authors>
+    <PackageTags>blazor;modal;simple</PackageTags>
+    <PackageProjectUrl>https://github.com/NikPiermafrost/SuperSimpleBlazorModal</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/NikPiermafrost/SuperSimpleBlazorModal</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RootNamespace>SuperSimpleBlazorModal</RootNamespace>
+    <AssemblyName>SuperSimpleBlazorModal</AssemblyName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
