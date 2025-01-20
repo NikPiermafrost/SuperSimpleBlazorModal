@@ -53,5 +53,6 @@
         {
             await jsModule.DisposeAsync();
         }
+        GC.SuppressFinalize(this);
     }
 }
