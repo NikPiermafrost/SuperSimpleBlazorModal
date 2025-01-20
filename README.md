@@ -63,6 +63,3 @@ dotnet add package SuperSimpleBlazorModal
 
 - `ShowModal()`: Opens the modal
 - `CloseModal()` Closes the modal
-
-## Support
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P0199MA7)
