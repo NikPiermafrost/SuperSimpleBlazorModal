@@ -17,7 +17,7 @@ jobs:
           dotnet-version: 9.0.x
       
       - name: Copy README.md
-        run: cp ../../README.md src/SuperSimpleBlazorModal/
+        run: cp README.md src/SuperSimpleBlazorModal/
 
       - name: Generate NuGet package
         run: |
