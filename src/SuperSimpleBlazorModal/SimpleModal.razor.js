@@ -1,9 +1,9 @@
 export function showModal(id) {
-  const modal = document.getElementById(id);
-  modal.showModal();
+	const modal = document.getElementById(id);
+	modal.showModal();
 }
 
 export function closeModal(id) {
-  const modal = document.getElementById(id);
-  modal.close();
+	const modal = document.getElementById(id);
+	modal.close();
 }
