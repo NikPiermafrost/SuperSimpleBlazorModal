@@ -54,6 +54,31 @@ dotnet add package SuperSimpleBlazorModal
 }
 ```
 
+## Backdrop customization
+
+If you have assigned an ID to your modal:
+```css
+#MyCustomModalId::backdrop {
+    background-image: linear-gradient(45deg,
+            magenta,
+            rebeccapurple,
+            dodgerblue,
+            green);
+    opacity: 0.75;
+}
+```
+If not, you can still customize the `::backdrop` pseudo element
+```css
+::backdrop {
+    background-image: linear-gradient(45deg,
+            magenta,
+            rebeccapurple,
+            dodgerblue,
+            green);
+    opacity: 0.75;
+}
+```
+
 ## Parameters
 - `ChildContent` (RenderFragment): The content to be displayed inside the modal.
 - `Id` (string): The unique identifier for the modal. Default is a new GUID.
