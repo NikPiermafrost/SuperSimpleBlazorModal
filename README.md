@@ -30,7 +30,7 @@ Use the SimpleModal component in your Blazor pages or components:
     Id="MannajaStaModale" 
     ExtraCssClass="modal-reset" 
     OnModalStateChange="ModalStateChanged"
-    OpenOnFirstReneder="true">
+    OpenOnFirstRender="true">
     <h1>Modal Content</h1>
     <p>This is the content of the modal</p>
     <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
@@ -89,7 +89,7 @@ If not, you can still customize the `::backdrop` pseudo element
 - `Id` (string): The unique identifier for the modal. Default is a new GUID.
 - `ExtraCssClass` (string): Additional CSS classes to apply to the modal.
 - `OnModalStateChange` (EventCallback): Callback signaling the state of the modal (true for open, false for close).
-- `OpenOnFirstReneder` (bool): Set it to true if you desire to open the modal on first render
+- `OpenOnFirstRender` (bool): Set it to true if you desire to open the modal on first render
 
 ## Methods
 
