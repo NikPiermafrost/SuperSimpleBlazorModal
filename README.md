@@ -89,7 +89,7 @@ If not, you can still customize the `::backdrop` pseudo element
 - `Id` (string): The unique identifier for the modal. Default is a new GUID.
 - `ExtraCssClass` (string): Additional CSS classes to apply to the modal.
 - `OnModalStateChange` (EventCallback): Callback signaling the state of the modal (true for open, false for close).
-- `OpenOnFirstReneder` (bool): Set it to true if you disire to open the modal on first render
+- `OpenOnFirstReneder` (bool): Set it to true if you desire to open the modal on first render
 
 ## Methods
 
