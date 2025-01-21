@@ -25,17 +25,21 @@ Use the SimpleModal component in your Blazor pages or components:
 @rendermode InteractiveAuto
 <h3>ModalTester</h3>
 
-<SimpleModal @ref="ModalRef" Id="MannajaStaModale" ExtraCssClass="modal-reset" OnModalReady="@(() => ModalReady())">
+<SimpleModal 
+    @ref="ModalRef" 
+    Id="MannajaStaModale" 
+    ExtraCssClass="modal-reset" 
+    OnModalStateChange="ModalStateChanged"
+    OpenOnFirstReneder="true">
     <h1>Modal Content</h1>
     <p>This is the content of the modal</p>
     <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
 </SimpleModal>
 
-<button disabled="@(!modalReady)" class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
+<button class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
 
 @code {
     private SimpleModal? ModalRef;
-    private bool modalReady = false;
 
     async Task ShowModal()
     {
@@ -47,12 +51,12 @@ Use the SimpleModal component in your Blazor pages or components:
         await ModalRef.CloseModal();
     }
 
-    void ModalReady() 
+    void ModalStateChanged(bool isOpen) 
     {
-        modalReady = true;
-        StateHasChanged();
+        // do stuff when modal state changes
     }
 }
+
 ```
 
 ## Backdrop customization
@@ -84,7 +88,8 @@ If not, you can still customize the `::backdrop` pseudo element
 - `ChildContent` (RenderFragment): The content to be displayed inside the modal.
 - `Id` (string): The unique identifier for the modal. Default is a new GUID.
 - `ExtraCssClass` (string): Additional CSS classes to apply to the modal.
-- `OnModalReady` (EventCallback): Callback signaling when the modal is ready to be used (js is loaded).
+- `OnModalStateChange` (EventCallback): Callback signaling the state of the modal (true for open, false for close).
+- `OpenOnFirstReneder` (bool): Set it to true if you disire to open the modal on first render
 
 ## Methods
 

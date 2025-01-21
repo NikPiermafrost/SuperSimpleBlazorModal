@@ -1,5 +1,4 @@
 ﻿@using Microsoft.JSInterop
-@implements IAsyncDisposable
 @inject IJSRuntime JS
 
 <dialog id="@Id" class="@ExtraCssClass">
@@ -18,48 +17,41 @@
     public string ExtraCssClass { get; set; } = "";
 
     [Parameter]
-    public EventCallback OnModalReady { get; set; }
+    public bool OpenOnFirstReneder { get; set; } = false;
 
-    IJSObjectReference? jsModule;
+    [Parameter]
+    public EventCallback<bool> OnModalStateChange { get; set; }
+
+    private bool IsOpen = false;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            jsModule = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./_content/SuperSimpleBlazorModal/SimpleModal.razor.js");
-            if (OnModalReady.HasDelegate)
+            if (OpenOnFirstReneder)
             {
-                await OnModalReady.InvokeAsync();
+                await ShowModal();
             }
         }
     }
 
     public async Task ShowModal() 
     {
-        Console.WriteLine(Id);
-        if (jsModule is null)
+        await JS.InvokeVoidAsync("eval", $"document.getElementById('{Id}').showModal()");
+        IsOpen = true;
+        if (OnModalStateChange.HasDelegate)
         {
-            throw new InvalidOperationException("JS module not loaded");
+            await OnModalStateChange.InvokeAsync(IsOpen);
         }
-        await jsModule.InvokeVoidAsync("showModal", Id);
     }
 
     public async Task CloseModal() 
     {
-        if (jsModule is null)
+        await JS.InvokeVoidAsync("eval", $"document.getElementById('{Id}').close()");
+        IsOpen = true;
+        if (OnModalStateChange.HasDelegate)
         {
-            throw new InvalidOperationException("JS module not loaded");
+            await OnModalStateChange.InvokeAsync(IsOpen);
         }
-        await jsModule.InvokeVoidAsync("closeModal", Id);
-    }
-
-    async ValueTask IAsyncDisposable.DisposeAsync()
-    {
-        if (jsModule is not null)
-        {
-            await jsModule.DisposeAsync();
-        }
-        GC.SuppressFinalize(this);
     }
 }
