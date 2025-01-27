@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Title>Super Simple Blazor Modal</Title>
     <PackageId>SuperSimpleBlazorModal</PackageId>
-    <PackageVersion>1.1.1</PackageVersion>
+    <PackageVersion>1.1.2</PackageVersion>
     <Authors>Nicola Piermattei</Authors>
     <PackageTags>blazor;modal;simple</PackageTags>
     <PackageProjectUrl>https://github.com/NikPiermafrost/SuperSimpleBlazorModal</PackageProjectUrl>

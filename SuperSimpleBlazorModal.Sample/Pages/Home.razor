@@ -1,0 +1,40 @@
+﻿@page "/"
+@using SuperSimpleBlazorModal
+
+<PageTitle>SuperSimpleBlazorModal</PageTitle>
+
+<SimpleModal 
+    @ref="ModalRef" 
+    Id="modal-tester" 
+    ExtraCssClass="modal-reset" 
+    OnModalStateChange="ModalStateChanged"
+    OpenOnFirstRender="true">
+    <h1>Modal Content</h1>
+    <p>This is the content of the modal with a customized backdrop</p>
+    <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
+</SimpleModal>
+
+<button class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
+
+<span>The modal is currently @(isModalOpen ? "Open" : "Closed")</span>
+
+@code {
+    private bool isModalOpen = false;
+    private SimpleModal? ModalRef;
+
+    async Task ShowModal()
+    {
+        await ModalRef!.ShowModal();
+    }
+
+    async Task CloseModal()
+    {
+        await ModalRef!.CloseModal();
+    }
+
+    void ModalStateChanged(bool isOpen) 
+    {
+        isModalOpen = isOpen;
+        StateHasChanged();
+    }
+}

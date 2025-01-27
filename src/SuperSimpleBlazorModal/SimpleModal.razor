@@ -1,4 +1,5 @@
 ﻿@using Microsoft.JSInterop
+@namespace SuperSimpleBlazorModal
 @inject IJSRuntime JS
 
 <dialog id="@Id" class="@ExtraCssClass">
@@ -48,7 +49,7 @@
     public async Task CloseModal() 
     {
         await JS.InvokeVoidAsync("eval", $"document.getElementById('{Id}').close()");
-        IsOpen = true;
+        IsOpen = false;
         if (OnModalStateChange.HasDelegate)
         {
             await OnModalStateChange.InvokeAsync(IsOpen);
