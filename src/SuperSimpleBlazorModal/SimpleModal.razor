@@ -1,14 +1,15 @@
 ﻿@using Microsoft.JSInterop
 @namespace SuperSimpleBlazorModal
+@implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<dialog id="@Id" class="@ExtraCssClass">
+<dialog @ref="DialogElement" id="@Id" class="@ExtraCssClass">
     @ChildContent
 </dialog>
 
 @code {
     [Parameter]
-    [EditorRequired] 
+    [EditorRequired]
     public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
@@ -23,12 +24,16 @@
     [Parameter]
     public EventCallback<bool> OnModalStateChange { get; set; }
 
-    private bool IsOpen = false;
+    private ElementReference DialogElement;
+    private IJSObjectReference? _jsModule;
+    private bool _isOpen;
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            _jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/SuperSimpleBlazorModal/simpleModal.js");
+
             if (OpenOnFirstRender)
             {
                 await ShowModal();
@@ -36,23 +41,43 @@
         }
     }
 
-    public async Task ShowModal() 
+    public async Task ShowModal()
     {
-        await JS.InvokeVoidAsync("eval", $"document.getElementById('{Id}').showModal()");
-        IsOpen = true;
-        if (OnModalStateChange.HasDelegate)
+        if (_jsModule is not null)
         {
-            await OnModalStateChange.InvokeAsync(IsOpen);
+            await _jsModule.InvokeVoidAsync("showModal", DialogElement);
+            _isOpen = true;
+            if (OnModalStateChange.HasDelegate)
+            {
+                await OnModalStateChange.InvokeAsync(_isOpen);
+            }
         }
     }
 
-    public async Task CloseModal() 
+    public async Task CloseModal()
     {
-        await JS.InvokeVoidAsync("eval", $"document.getElementById('{Id}').close()");
-        IsOpen = false;
-        if (OnModalStateChange.HasDelegate)
+        if (_jsModule is not null)
         {
-            await OnModalStateChange.InvokeAsync(IsOpen);
+            await _jsModule.InvokeVoidAsync("closeModal", DialogElement);
+            _isOpen = false;
+            if (OnModalStateChange.HasDelegate)
+            {
+                await OnModalStateChange.InvokeAsync(_isOpen);
+            }
+        }
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        try
+        {
+            if (_jsModule is not null)
+            {
+                await _jsModule.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
         }
     }
 }

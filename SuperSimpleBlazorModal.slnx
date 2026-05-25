@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SuperSimpleBlazorModal/SuperSimpleBlazorModal.csproj" />
+  </Folder>
+  <Project Path="SuperSimpleBlazorModal.Sample/SuperSimpleBlazorModal.Sample.csproj" />
+</Solution>

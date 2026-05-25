@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-05-25
+- Replaced `eval()` JS interop with isolated JS module via `IJSObjectReference`
+- Added `ElementReference` for direct dialog element access (no `getElementById`)
+- Added `IAsyncDisposable` for proper JS module cleanup
+- Added `JSDisconnectedException` handling for server-side Blazor resilience
+- Renamed private field `IsOpen` to `_isOpen`
+
 ## [1.3.0] - 2025-11-11
 - Added support to net10.0
 
