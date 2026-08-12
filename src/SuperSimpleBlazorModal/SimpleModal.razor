@@ -3,7 +3,7 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<dialog @ref="DialogElement" id="@Id" class="@ExtraCssClass">
+<dialog @ref="DialogElement" id="@Id" class="@ExtraCssClass" closedby="@(BackdropClose ? "any" : null)">
     @ChildContent
 </dialog>
 
@@ -23,6 +23,9 @@
 
     [Parameter]
     public EventCallback<bool> OnModalStateChange { get; set; }
+
+    [Parameter]
+    public bool BackdropClose { get; set; } = true;
 
     private ElementReference DialogElement;
     private IJSObjectReference? _jsModule;

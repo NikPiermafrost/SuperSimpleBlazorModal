@@ -3,38 +3,131 @@
 
 <PageTitle>SuperSimpleBlazorModal</PageTitle>
 
-<SimpleModal 
-    @ref="ModalRef" 
-    Id="modal-tester" 
-    ExtraCssClass="modal-reset" 
-    OnModalStateChange="ModalStateChanged"
-    OpenOnFirstRender="true">
-    <h1>Modal Content</h1>
-    <p>This is the content of the modal with a customized backdrop</p>
-    <button class="btn btn-secondary" @onclick="CloseModal">Close</button>
+<div class="container py-4">
+    <h1 class="h4 mb-4">SuperSimpleBlazorModal</h1>
+
+    <h2 class="h6">Backdrop close</h2>
+    <span class="badge @(isBackdropModalOpen ? "bg-success" : "bg-secondary")">@(isBackdropModalOpen ? "Open" : "Closed")</span>
+    <button type="button" class="btn btn-primary btn-sm ms-2" @onclick="ShowBackdropModal">Show Modal</button>
+
+    <h2 class="h6 mt-4">Explicit close</h2>
+    <span class="badge @(isExplicitModalOpen ? "bg-success" : "bg-secondary")">@(isExplicitModalOpen ? "Open" : "Closed")</span>
+    <button type="button" class="btn btn-primary btn-sm ms-2" @onclick="ShowExplicitModal">Show Modal</button>
+
+    <h2 class="h6 mt-4">Parameter settings</h2>
+    <table class="table table-sm table-bordered w-auto">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Demo 1 (backdrop close)</th>
+                <th>Demo 2 (explicit close)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>ChildContent</code></td>
+                <td>Custom markup with a close button</td>
+                <td>Custom markup with a close button</td>
+            </tr>
+            <tr>
+                <td><code>Id</code></td>
+                <td><code>backdrop-close-modal</code></td>
+                <td><code>explicit-close-modal</code></td>
+            </tr>
+            <tr>
+                <td><code>ExtraCssClass</code></td>
+                <td><code>modal-reset p-3</code></td>
+                <td><code>modal-reset border</code></td>
+            </tr>
+            <tr>
+                <td><code>OpenOnFirstRender</code></td>
+                <td><code>true</code></td>
+                <td><code>false</code></td>
+            </tr>
+            <tr>
+                <td><code>OnModalStateChange</code></td>
+                <td><code>BackdropModalStateChanged</code></td>
+                <td><code>ExplicitModalStateChanged</code></td>
+            </tr>
+            <tr>
+                <td><code>BackdropClose</code></td>
+                <td><code>true</code></td>
+                <td><code>false</code></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<SimpleModal
+    @ref="BackdropModalRef"
+    Id="backdrop-close-modal"
+    ExtraCssClass="modal-reset p-3"
+    OpenOnFirstRender="true"
+    BackdropClose="true"
+    OnModalStateChange="BackdropModalStateChanged">
+    <p class="mb-3">This modal closes when the backdrop is clicked.</p>
+    <button type="button" class="btn btn-primary" @onclick="CloseBackdropModal">Close</button>
 </SimpleModal>
 
-<button class="btn btn-primary" @onclick="ShowModal">Show Modal</button>
-
-<span>The modal is currently @(isModalOpen ? "Open" : "Closed")</span>
+<SimpleModal
+    @ref="ExplicitModalRef"
+    Id="explicit-close-modal"
+    ExtraCssClass="modal-reset border"
+    OpenOnFirstRender="false"
+    BackdropClose="false"
+    OnModalStateChange="ExplicitModalStateChanged">
+    <p class="mb-3">Clicking the backdrop does not close this modal.</p>
+    <button type="button" class="btn btn-primary" @onclick="CloseExplicitModal">Close</button>
+</SimpleModal>
 
 @code {
-    private bool isModalOpen = false;
-    private SimpleModal? ModalRef;
+    private bool isBackdropModalOpen = true;
+    private bool isExplicitModalOpen = false;
 
-    async Task ShowModal()
+    private SimpleModal? BackdropModalRef;
+    private SimpleModal? ExplicitModalRef;
+
+    private async Task ShowBackdropModal()
     {
-        await ModalRef!.ShowModal();
+        if (BackdropModalRef is not null)
+        {
+            await BackdropModalRef.ShowModal();
+        }
     }
 
-    async Task CloseModal()
+    private async Task ShowExplicitModal()
     {
-        await ModalRef!.CloseModal();
+        if (ExplicitModalRef is not null)
+        {
+            await ExplicitModalRef.ShowModal();
+        }
     }
 
-    void ModalStateChanged(bool isOpen) 
+    private async Task CloseBackdropModal()
     {
-        isModalOpen = isOpen;
+        if (BackdropModalRef is not null)
+        {
+            await BackdropModalRef.CloseModal();
+        }
+    }
+
+    private async Task CloseExplicitModal()
+    {
+        if (ExplicitModalRef is not null)
+        {
+            await ExplicitModalRef.CloseModal();
+        }
+    }
+
+    private void BackdropModalStateChanged(bool isOpen)
+    {
+        isBackdropModalOpen = isOpen;
+        StateHasChanged();
+    }
+
+    private void ExplicitModalStateChanged(bool isOpen)
+    {
+        isExplicitModalOpen = isOpen;
         StateHasChanged();
     }
 }
