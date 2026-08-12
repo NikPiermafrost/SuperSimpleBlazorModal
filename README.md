@@ -90,6 +90,7 @@ If not, you can still customize the `::backdrop` pseudo element
 - `ExtraCssClass` (string): Additional CSS classes to apply to the modal.
 - `OnModalStateChange` (EventCallback): Callback signaling the state of the modal (true for open, false for close).
 - `OpenOnFirstRender` (bool): Set it to true if you desire to open the modal on first render
+- `BackdropClose` (bool): Defaults to `true`. When `true`, renders the dialog with `closedby="any"` so a backdrop click can close the modal. When `false`, the `closedby` attribute is omitted so backdrop clicks do not close it.
 
 ## Methods
 
