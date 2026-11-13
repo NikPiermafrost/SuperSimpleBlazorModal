@@ -7,7 +7,7 @@ Super Simple Blazor Modal is a lightweight and easy-to-use modal component for B
 - Simple and intuitive API
 - Lightweight and fast
 - Customizable with CSS classes
-- Supports .NET 8, .NET 9 and .NET 10
+- Supports .NET 10 and .NET 11
 
 ## Installation
 

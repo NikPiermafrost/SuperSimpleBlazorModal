@@ -35,7 +35,18 @@
     {
         if (firstRender)
         {
-            _jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/SuperSimpleBlazorModal/simpleModal.js");
+            // BL0016: JS interop can fail (e.g. circuit disconnect). If the module can't load,
+            // _jsModule stays null and ShowModal/CloseModal no-op instead of crashing.
+            try
+            {
+                _jsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./_content/SuperSimpleBlazorModal/simpleModal.js");
+            }
+            catch (JSDisconnectedException)
+            {
+            }
+            catch (JSException)
+            {
+            }
 
             if (OpenOnFirstRender)
             {
@@ -48,7 +59,18 @@
     {
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("showModal", DialogElement);
+            try
+            {
+                await _jsModule.InvokeVoidAsync("showModal", DialogElement);
+            }
+            catch (JSDisconnectedException)
+            {
+                return;
+            }
+            catch (JSException)
+            {
+                return;
+            }
             _isOpen = true;
             if (OnModalStateChange.HasDelegate)
             {
@@ -61,7 +83,18 @@
     {
         if (_jsModule is not null)
         {
-            await _jsModule.InvokeVoidAsync("closeModal", DialogElement);
+            try
+            {
+                await _jsModule.InvokeVoidAsync("closeModal", DialogElement);
+            }
+            catch (JSDisconnectedException)
+            {
+                return;
+            }
+            catch (JSException)
+            {
+                return;
+            }
             _isOpen = false;
             if (OnModalStateChange.HasDelegate)
             {

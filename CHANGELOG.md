@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-11-13
+- **BREAKING** Dropped support for .NET 8 and .NET 9; the library now targets .NET 10 and .NET 11 only
+- Added support for .NET 11 (`Microsoft.AspNetCore.Components.Web` 11.0.*)
+- Fixed all new .NET 11 `BL0016` JS-interop analyzer warnings — module import and modal open/close calls are guarded (`JSDisconnectedException`/`JSException`), and open/close no longer report state change if the interop call failed
+- Sample app ported to .NET 11 and migrated from deprecated `Microsoft.AspNetCore.Components.WebAssembly.DevServer` to `Microsoft.AspNetCore.Components.Gateway`
+
 ## [1.5.1] - 2026-08-12
 - Documented the `BackdropClose` parameter in the README, including its default value and backdrop-click behavior
 

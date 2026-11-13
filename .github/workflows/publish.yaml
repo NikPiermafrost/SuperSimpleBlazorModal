@@ -1,51 +1,69 @@
-name: Publish to nuget feed
+name: publish
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  package-and-publish-lib:
+  publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # enables GitHub OIDC token issuance for NuGet trusted publishing
+      contents: read
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 10.0.x
+          dotnet-version: |
+            10.0.x
+            11.0.x
 
-      - name: Generate NuGet package
+      # Publish only when the csproj PackageVersion isn't on nuget.org yet,
+      # so routine pushes to main don't fail on duplicate versions
+      - name: Check if version already published
+        id: version
         run: |
-          dotnet pack src/SuperSimpleBlazorModal/SuperSimpleBlazorModal.csproj \
-          --configuration Release \
-          -o packages
+          VER=$(grep -oPm1 '(?<=<PackageVersion>)[^<]+' src/SuperSimpleBlazorModal/SuperSimpleBlazorModal.csproj)
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          if curl -fsSL "https://api.nuget.org/v3-flatcontainer/supersimpleblazormodal/index.json" | grep -qx "\"$VER\""; then
+            echo "v$VER already published, skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Publish NuGet package
-        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - name: Pack
+        if: steps.version.outputs.skip != 'true'
+        run: dotnet pack src/SuperSimpleBlazorModal -c Release -o artifacts
+
+      - name: NuGet login (OIDC → temp API key)
+        if: steps.version.outputs.skip != 'true'
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Push
+        if: steps.version.outputs.skip != 'true'
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
 
   gh-pages:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      # Install .NET 8.0 SDK
-      - name: Setup .NET 8 preview
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
-          include-prerelease: true
+          dotnet-version: '11.0.x'
 
-      # Generate the website
-      - name: Publish
+      - name: Publish sample
         run: dotnet publish ./SuperSimpleBlazorModal.Sample/SuperSimpleBlazorModal.Sample.csproj --configuration Release --output build
 
-      # Publish the website
       - name: GitHub Pages action
-        if: ${{ github.ref == 'refs/heads/main' }} # Publish only when the push is on main
-        uses: peaceiris/actions-gh-pages@v3.6.1
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
